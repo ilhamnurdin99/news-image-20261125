@@ -6,5 +6,9 @@ const path = require('node:path');
 // copies it to the grader's output dir as entry.png.
 const outDir = process.env.MAKEFUN_OUTPUT_DIR || '/output';
 const src = path.join(__dirname, 'entry.png');
+const size = fs.statSync(src).size;
+if (size > 1024 * 1024) {
+  throw new Error(`entry.png is ${size} bytes, over the 1 MiB limit`);
+}
 fs.mkdirSync(outDir, { recursive: true });
 fs.copyFileSync(src, path.join(outDir, 'entry.png'));
